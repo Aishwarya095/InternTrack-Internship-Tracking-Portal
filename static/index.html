@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INTERNTRACK — AURA-Powered Internship Application & Tracking Portal</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand-section">
+        <div class="brand-icon">IT</div>
+        <div class="brand-text">
+          <h1>INTERNTRACK</h1>
+          <span>AURA Intelligence</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <div class="nav-section-title">REAL-WORLD WORKFLOW</div>
+        <button class="nav-btn active" data-view="dashboard" onclick="switchView('dashboard')">
+          <i class="fa-solid fa-chart-pie"></i> Dashboard
+        </button>
+        <button class="nav-btn" data-view="form" onclick="switchView('form')">
+          <i class="fa-solid fa-file-signature"></i> Internship Form
+        </button>
+        <button class="nav-btn" data-view="submissions" onclick="switchView('submissions')">
+          <i class="fa-solid fa-clock-rotate-left"></i> My Submissions
+        </button>
+        <button class="nav-btn" data-view="review-queue" onclick="switchView('review-queue')">
+          <i class="fa-solid fa-list-check"></i> Coordinator Review
+        </button>
+        <button class="nav-btn" data-view="hod-queue" onclick="switchView('hod-queue')">
+          <i class="fa-solid fa-user-tie"></i> HOD Approval Desk
+        </button>
+        <button class="nav-btn" data-view="opportunities" onclick="switchView('opportunities')">
+          <i class="fa-solid fa-briefcase"></i> Opportunities & Vacancies
+        </button>
+        <button class="nav-btn" data-view="students" onclick="switchView('students')">
+          <i class="fa-solid fa-users"></i> Students Database
+        </button>
+        <button class="nav-btn" data-view="tracking" onclick="switchView('tracking')">
+          <i class="fa-solid fa-timeline"></i> 3–4 Mo. Tracking & Journals
+        </button>
+        <button class="nav-btn" data-view="evaluation" onclick="switchView('evaluation')">
+          <i class="fa-solid fa-clipboard-check"></i> Final Evaluation & Credits
+        </button>
+        <button class="nav-btn" data-view="audit" onclick="switchView('audit')">
+          <i class="fa-solid fa-shield-halved"></i> Immutable Audit Trail
+        </button>
+
+        <div class="nav-section-title">AURA AGENTIC AI LAYER</div>
+        <button class="nav-btn highlight-ai" data-view="chat" onclick="switchView('chat')">
+          <i class="fa-solid fa-robot"></i> 1-on-1 AURA Assistant
+        </button>
+        <button class="nav-btn highlight-ai" data-view="studio" onclick="switchView('studio')">
+          <i class="fa-solid fa-microchip"></i> 14-Lab Studio (LangGraph)
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="system-status">
+          <span class="pulse-dot"></span>
+          <span>System Online</span>
+        </div>
+        <span style="font-size:0.7rem; color:var(--text-muted);">v1.0.0</span>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="view-heading">
+            <h2 id="currentViewTitle">Operational Dashboard</h2>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Role Switcher -->
+          <div class="role-switcher-container">
+            <span class="role-label">Role:</span>
+            <button class="role-chip active" id="roleBtnStudent" onclick="setRole('STUDENT')">Student</button>
+            <button class="role-chip" id="roleBtnCoord" onclick="setRole('COORDINATOR')">Coordinator</button>
+            <button class="role-chip" id="roleBtnHOD" onclick="setRole('HOD')">HOD</button>
+          </div>
+
+          <!-- Notification Bell -->
+          <button class="icon-badge-btn" onclick="toggleNotifDrawer()" title="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notif-count" id="notifBadge">0</span>
+          </button>
+
+          <!-- User Profile -->
+          <div class="user-badge">
+            <div class="user-avatar" id="userAvatarText">ST</div>
+            <div class="user-details">
+              <span class="user-name" id="userNameText">Student</span>
+              <span class="user-role-text" id="userRoleText">Student</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTENT PANELS -->
+      <main class="content-area">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section id="view-dashboard" class="view-panel active">
+          <div class="metrics-grid" id="statsGrid">
+            <!-- Dynamic KPI Cards populated from SQLite -->
+            <div class="metric-card">
+              <div class="metric-icon blue"><i class="fa-solid fa-users"></i></div>
+              <div class="metric-info">
+                <h4>Total Students</h4>
+                <div class="metric-value" id="statTotalStudents">--</div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon amber"><i class="fa-solid fa-hourglass-half"></i></div>
+              <div class="metric-info">
+                <h4>Pending Reviews</h4>
+                <div class="metric-value" id="statPendingReviews">--</div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon green"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="metric-info">
+                <h4>Approved Internships</h4>
+                <div class="metric-value" id="statApprovedInternships">--</div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon red"><i class="fa-solid fa-circle-xmark"></i></div>
+              <div class="metric-info">
+                <h4>Rejected Apps</h4>
+                <div class="metric-value" id="statRejectedApps">--</div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon purple"><i class="fa-solid fa-building-circle-check"></i></div>
+              <div class="metric-info">
+                <h4>Placed Company</h4>
+                <div class="metric-value" id="statPlacedStudents">--</div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon blue"><i class="fa-solid fa-id-card"></i></div>
+              <div class="metric-info">
+                <h4>Available Vacancies</h4>
+                <div class="metric-value" id="statAvailVacancies">--</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem;">
+            <!-- Recent Submissions Desk -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Pending Submissions Review Queue</h3>
+                <span class="badge warning" id="badgePendingCount">0 Pending</span>
+              </div>
+              <div class="table-responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>USN</th>
+                      <th>Student</th>
+                      <th>Version</th>
+                      <th>Pref 1 / Placed Company</th>
+                      <th>Type</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardPendingTable">
+                    <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Loading live queue...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Real-World Process Flow Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Real-World College Workflow</h3>
+                <span class="badge info">8th Sem Policy</span>
+              </div>
+              <div style="font-size:0.83rem; color:var(--text-secondary); line-height:1.7;">
+                <p>• <strong>Primary Authority:</strong> The Internship Coordinator reviews all student submissions and must enter a mandatory rejection reason if not approved.</p>
+                <p style="margin-top:0.5rem;">• <strong>Multiple Submissions:</strong> Students can re-apply upon rejection; submission history is preserved with incremental versions.</p>
+                <p style="margin-top:0.5rem;">• <strong>Placed Company Bypass:</strong> Students with campus placement integrated internships are recorded under <span class="badge placed">PLACED_COMPANY</span> and skip standard matching.</p>
+                <p style="margin-top:0.5rem;">• <strong>Dynamic Vacancies:</strong> Verified approvals consume vacancy quotas and auto-close when full.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. STUDENT INTERNSHIP FORM -->
+        <section id="view-form" class="view-panel">
+          <div class="card" style="max-width: 860px; margin: 0 auto;">
+            <div class="card-header">
+              <h3 class="card-title">8th-Semester Internship Preference Form</h3>
+              <span class="badge info">Versioned Multi-Submission</span>
+            </div>
+            
+            <form id="internshipSubmissionForm" onsubmit="handleFormSubmit(event)">
+              <!-- Pre-filled Opportunity Notification Banner -->
+              <div id="formPrefilledBanner" style="display:none; margin-bottom:1.25rem;"></div>
+
+              <!-- Student Profile Editable Input Fields (Empty by default for any student to fill) -->
+              <div style="display:grid; grid-template-columns: 1.3fr 1.1fr 1fr 1fr; gap:1rem; margin-bottom:1.25rem; padding:1.1rem; background:rgba(255,255,255,0.03); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
+                <div>
+                  <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:0.35rem;">
+                    <i class="fa-solid fa-user" style="color:var(--primary); margin-right:4px;"></i> STUDENT NAME
+                  </label>
+                  <input type="text" id="formStudentNameInput" class="form-control" placeholder="Enter Full Name (e.g. Shiva, Anam)" value="">
+                </div>
+                <div>
+                  <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:0.35rem;">
+                    <i class="fa-solid fa-id-card" style="color:var(--primary); margin-right:4px;"></i> USN (STUDENT ID)
+                  </label>
+                  <input type="text" id="formStudentUSNInput" class="form-control" placeholder="e.g. 01FE23BCS098" value="" style="text-transform:uppercase;" onchange="handleUSNChange(this.value)">
+                </div>
+                <div>
+                  <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:0.35rem;">
+                    <i class="fa-solid fa-code-branch" style="color:var(--primary); margin-right:4px;"></i> BRANCH
+                  </label>
+                  <input type="text" id="formStudentBranchInput" class="form-control" placeholder="e.g. CSE, ISE, AIML" value="">
+                </div>
+                <div>
+                  <label style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:0.35rem;">
+                    <i class="fa-solid fa-chart-line" style="color:var(--primary); margin-right:4px;"></i> CGPA
+                  </label>
+                  <input type="number" step="0.01" min="0" max="10" id="formStudentCGPAInput" class="form-control" placeholder="e.g. 8.8" value="">
+                </div>
+              </div>
+
+              <!-- Campus Placement Special Case Switcher -->
+              <div class="form-group" style="padding:1rem; background:rgba(99, 102, 241, 0.08); border:1px solid var(--border-active); border-radius:var(--radius-sm);">
+                <label style="font-weight:700; color:#fff; display:flex; align-items:center; gap:0.5rem;">
+                  <i class="fa-solid fa-graduation-cap" style="color:var(--primary);"></i>
+                  Do you already have a campus placement package with an integrated internship?
+                </label>
+                <div style="display:flex; gap:1.5rem; margin-top:0.6rem;">
+                  <label style="cursor:pointer; display:flex; align-items:center; gap:0.4rem; color:#fff;">
+                    <input type="radio" name="is_placed_radio" value="NO" checked onchange="togglePlacementFields(false)">
+                    NO (Standard 4 Company Preferences)
+                  </label>
+                  <label style="cursor:pointer; display:flex; align-items:center; gap:0.4rem; color:#fff;">
+                    <input type="radio" name="is_placed_radio" value="YES" onchange="togglePlacementFields(true)">
+                    YES (Mark as PLACED_COMPANY Internship Exemption)
+                  </label>
+                </div>
+              </div>
+
+              <!-- PLACED COMPANY CONTAINER -->
+              <div id="placedCompanyContainer" style="display:none; padding:1rem; background:rgba(168, 85, 247, 0.08); border:1px dashed rgba(168, 85, 247, 0.4); border-radius:var(--radius-sm); margin-bottom:1.25rem;">
+                <h4 style="font-size:0.9rem; color:#c084fc; margin-bottom:0.75rem;"><i class="fa-solid fa-building-circle-check"></i> Campus Placement Exemption Details</h4>
+                <div style="display:grid; grid-template-columns: 1.5fr 1fr; gap:1rem;">
+                  <div class="form-group">
+                    <label>Placed Company Name *</label>
+                    <input type="text" id="placedCompanyNameInput" class="form-control" placeholder="e.g. TCS Digital, Infosys, Amazon">
+                  </div>
+                  <div class="form-group">
+                    <label>Duration</label>
+                    <select id="placedDurationSelect" class="form-control">
+                      <option value="4 Months">4 Months (Full Semester)</option>
+                      <option value="3 Months">3 Months</option>
+                      <option value="3-4 Months">3-4 Months</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Package & Internship Details *</label>
+                  <textarea id="placementDetailsInput" class="form-control" rows="2" placeholder="e.g. 7.5 LPA Package with mandatory 4-month pre-employment internship."></textarea>
+                </div>
+              </div>
+
+              <!-- NORMAL 4 PREFERENCES CONTAINER -->
+              <div id="normalPreferencesContainer">
+                <h4 style="font-size:0.9rem; color:#fff; margin-bottom:0.85rem;"><i class="fa-solid fa-list-ol"></i> Company Preferences (Up to 4)</h4>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                  <!-- Pref 1 -->
+                  <div style="padding:0.85rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
+                    <label style="font-weight:700; color:var(--primary-light);">Preference 1 (Primary) *</label>
+                    <input type="text" id="pref1Company" class="form-control" style="margin-top:0.35rem;" placeholder="Company Name (e.g. ABC Technologies)" required>
+                    <input type="text" id="pref1Role" class="form-control" style="margin-top:0.5rem;" placeholder="Role / Domain (e.g. AI/ML Intern)">
+                    <input type="text" id="pref1Loc" class="form-control" style="margin-top:0.5rem;" placeholder="Location (e.g. Bangalore)">
+                  </div>
+                  <!-- Pref 2 -->
+                  <div style="padding:0.85rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
+                    <label style="font-weight:700; color:var(--text-secondary);">Preference 2</label>
+                    <input type="text" id="pref2Company" class="form-control" style="margin-top:0.35rem;" placeholder="Company Name (e.g. XYZ Labs)">
+                    <input type="text" id="pref2Role" class="form-control" style="margin-top:0.5rem;" placeholder="Role / Domain">
+                    <input type="text" id="pref2Loc" class="form-control" style="margin-top:0.5rem;" placeholder="Location">
+                  </div>
+                  <!-- Pref 3 -->
+                  <div style="padding:0.85rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
+                    <label style="font-weight:700; color:var(--text-secondary);">Preference 3</label>
+                    <input type="text" id="pref3Company" class="form-control" style="margin-top:0.35rem;" placeholder="Company Name (e.g. PQR Solutions)">
+                    <input type="text" id="pref3Role" class="form-control" style="margin-top:0.5rem;" placeholder="Role / Domain">
+                    <input type="text" id="pref3Loc" class="form-control" style="margin-top:0.5rem;" placeholder="Location">
+                  </div>
+                  <!-- Pref 4 -->
+                  <div style="padding:0.85rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:var(--radius-sm);">
+                    <label style="font-weight:700; color:var(--text-secondary);">Preference 4</label>
+                    <input type="text" id="pref4Company" class="form-control" style="margin-top:0.35rem;" placeholder="Company Name (e.g. DEF AI)">
+                    <input type="text" id="pref4Role" class="form-control" style="margin-top:0.5rem;" placeholder="Role / Domain">
+                    <input type="text" id="pref4Loc" class="form-control" style="margin-top:0.5rem;" placeholder="Location">
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; gap:1rem; margin-top:1.5rem;">
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                <button type="submit" class="btn btn-primary" id="btnSubmitForm">
+                  <i class="fa-solid fa-paper-plane"></i> Submit Internship Form
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- 3. MY SUBMISSIONS (Student History) -->
+        <section id="view-submissions" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">My Internship Submissions & Review History</h3>
+              <button class="btn btn-primary btn-sm" onclick="switchView('form')">
+                <i class="fa-solid fa-plus"></i> New Submission
+              </button>
+            </div>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:1rem;">
+              Multiple submissions are preserved with full version history. If a submission is rejected, you can review the mandatory rejection reason below and submit a revised preference form.
+            </p>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Version</th>
+                    <th>Type</th>
+                    <th>Preferences Submitted</th>
+                    <th>Status</th>
+                    <th>Coordinator Decision</th>
+                    <th>Rejection Reason / Comments</th>
+                    <th>Approved Allotment</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="studentSubmissionsTable">
+                  <tr><td colspan="8" style="text-align:center; color:var(--text-muted);">No submissions recorded yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. COORDINATOR REVIEW QUEUE -->
+        <section id="view-review-queue" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Coordinator Review Desk (Primary Authority)</h3>
+              <span class="badge info">Mandatory Rejection Reason Enforced</span>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sub ID</th>
+                    <th>Student Name</th>
+                    <th>USN & CGPA</th>
+                    <th>Version</th>
+                    <th>Type</th>
+                    <th>Company Preferences</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="coordinatorReviewTable">
+                  <tr><td colspan="8" style="text-align:center; color:var(--text-muted);">Loading submissions...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. HOD APPROVAL DESK -->
+        <section id="view-hod-queue" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">HOD Departmental Sanction Queue</h3>
+              <span class="badge warning">Department Authority</span>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Sub ID</th>
+                    <th>Student Name</th>
+                    <th>Branch</th>
+                    <th>Allotted Company</th>
+                    <th>Duration</th>
+                    <th>Coordinator Signoff</th>
+                    <th>HOD Decision</th>
+                  </tr>
+                </thead>
+                <tbody id="hodReviewTable">
+                  <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Loading departmental applications...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. OPPORTUNITIES & VACANCIES -->
+        <section id="view-opportunities" class="view-panel">
+          <div class="card">
+            <div class="card-header" style="flex-wrap:wrap; gap:0.75rem;">
+              <div>
+                <h3 class="card-title" style="margin-bottom:0.25rem;">Available Internship Opportunities & Vacancy Management</h3>
+                <div style="font-size:0.78rem; color:var(--text-muted);">
+                  Real-time industry opportunities from Indeed India & Top Corporate Partners (Infosys, TCS, Bosch, Google, Microsoft)
+                </div>
+              </div>
+              <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+                <span id="syncStatusMsg" style="font-size:0.8rem; font-weight:600; transition:all 0.3s ease;"></span>
+                <div style="display:inline-flex; align-items:center; gap:0.35rem; background:rgba(0,0,0,0.25); padding:2px 8px; border-radius:6px; border:1px solid rgba(59,130,246,0.3);">
+                  <span style="font-size:0.72rem; color:var(--text-muted);"><i class="fa-solid fa-clock-rotate-left"></i> Freshness:</span>
+                  <select id="syncFreshnessSelect" style="background:transparent; border:none; color:#93c5fd; font-size:0.75rem; font-weight:600; cursor:pointer; outline:none;">
+                    <option value="24" style="background:#1e293b; color:#fff;">Past 24 Hours (1 Day Ago)</option>
+                    <option value="48" selected style="background:#1e293b; color:#fff;">Past 48 Hours (1–2 Days Ago)</option>
+                    <option value="72" style="background:#1e293b; color:#fff;">Past 3 Days</option>
+                  </select>
+                </div>
+                <button class="btn btn-outline btn-sm" id="btnSyncIndeed" onclick="syncIndeedPostings()" title="Pull fresh postings from Indeed India" style="border-color:#3b82f6; color:#60a5fa; display:inline-flex; align-items:center; gap:6px;">
+                  <i class="fa-solid fa-bolt"></i> Sync Fresh Live Jobs
+                </button>
+                <button class="btn btn-primary btn-sm" id="btnCreateOpp" onclick="openCreateOppModal()">
+                  <i class="fa-solid fa-plus"></i> Create Opportunity
+                </button>
+              </div>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin:1rem 0 0.5rem 0; align-items:center; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:0.75rem;">
+              <span style="font-size:0.78rem; color:var(--text-muted); font-weight:600;"><i class="fa-solid fa-filter"></i> Category:</span>
+              <button class="btn btn-secondary btn-sm opp-cat-btn" id="filterBtnAll" onclick="filterOppsByCategory('ALL', this)" style="padding:0.3rem 0.75rem; font-size:0.78rem; background:var(--primary); color:#fff; border-color:var(--primary);"><i class="fa-solid fa-briefcase"></i> All Real Companies (30+)</button>
+              <button class="btn btn-secondary btn-sm opp-cat-btn" id="filterBtnCorp" onclick="filterOppsByCategory('CORP', this)" style="padding:0.3rem 0.75rem; font-size:0.78rem; border-color:rgba(16,185,129,0.5); color:#6ee7b7;"><i class="fa-solid fa-building"></i> Top MNCs (20 Companies)</button>
+              <button class="btn btn-secondary btn-sm opp-cat-btn" id="filterBtnIndeed" onclick="filterOppsByCategory('INDEED', this)" style="padding:0.3rem 0.75rem; font-size:0.78rem; border-color:rgba(59,130,246,0.5); color:#93c5fd;"><i class="fa-solid fa-bolt"></i> Real-Time Indeed Postings</button>
+              <button class="btn btn-secondary btn-sm opp-cat-btn" id="filterBtnBench" onclick="filterOppsByCategory('BENCHMARK', this)" style="padding:0.3rem 0.75rem; font-size:0.78rem; border-color:rgba(168,85,247,0.5); color:#d8b4fe;"><i class="fa-solid fa-vial"></i> Lab Test Fixtures (Grading Only)</button>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:1.25rem; margin-top:1rem;" id="oppsCardsGrid">
+              <!-- Dynamically populated opportunity cards -->
+            </div>
+
+          </div>
+        </section>
+
+        <!-- 7. STUDENTS DATABASE -->
+        <section id="view-students" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">8th-Semester Student Database Directory</h3>
+              <input type="text" id="searchStudentInput" class="form-control" style="max-width:280px;" placeholder="Search by name, USN, branch..." onkeyup="filterStudentsTable()">
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>USN</th>
+                    <th>Name</th>
+                    <th>Branch</th>
+                    <th>CGPA</th>
+                    <th>Backlogs</th>
+                    <th>Placement Status</th>
+                    <th>Placed Company</th>
+                  </tr>
+                </thead>
+                <tbody id="studentsDirectoryTable">
+                  <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Loading students...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. 3-4 MO. TRACKING & JOURNALS -->
+        <section id="view-tracking" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Confirmed 3–4 Month Internship Execution & Progress Journals</h3>
+              <button class="btn btn-primary btn-sm" onclick="openProgressReportModal()">
+                <i class="fa-solid fa-file-circle-plus"></i> Submit Bi-Weekly Journal
+              </button>
+            </div>
+            <div id="internshipTrackingCards">
+              <!-- Active tracking cards -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. FINAL EVALUATION & CREDITS -->
+        <section id="view-evaluation" class="view-panel">
+          <div class="card">
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+              <div>
+                <h3 class="card-title" style="margin-bottom:0.25rem;">Final Semester Internship Evaluation & 12 Academic Credits Clearance</h3>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin:0;">
+                  <i class="fa-solid fa-circle-info" style="color:var(--primary);"></i>
+                  <strong>Division of Responsibility:</strong> Coordinator & Mentor enter scores (out of 100). HOD conducts institutional review & clicks <em>Finalize Signoff</em> to award 12 credits.
+                </p>
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="openEvaluationModal()">
+                <i class="fa-solid fa-pen-to-square"></i> Record / Enter Marks
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th>Company</th>
+                    <th>Mentor (40)</th>
+                    <th>Presentation (30)</th>
+                    <th>Report (30)</th>
+                    <th>Total (100)</th>
+                    <th>Grade</th>
+                    <th>Credits</th>
+                    <th>Approval Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="evaluationTable">
+                  <tr><td colspan="10" style="text-align:center; color:var(--text-muted);">Loading evaluations...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10. IMMUTABLE AUDIT TRAIL -->
+        <section id="view-audit" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Immutable Append-Only Audit Trail</h3>
+              <span class="badge info">System Integrity</span>
+            </div>
+            <div class="table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>Actor</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                    <th>Record ID</th>
+                    <th>State Transition</th>
+                    <th>Comments / Metadata</th>
+                  </tr>
+                </thead>
+                <tbody id="auditTrailTable">
+                  <tr><td colspan="7" style="text-align:center; color:var(--text-muted);">Loading audit logs...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11. 1-ON-1 AURA ASSISTANT CHAT -->
+        <section id="view-chat" class="view-panel">
+          <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+              <div class="chat-bubble aura">
+                <div style="font-weight:700; color:var(--primary-light); margin-bottom:0.25rem;">AURA Assistant</div>
+                Hello! I am your AURA Internship Intelligence assistant. I operate on real university data. You can:
+                <br>• Ask for factual eligibility checks: <code>"Am I eligible for ABC Technologies?"</code>
+                <br>• Request an 8th-semester roadmap: <code>"I want an internship"</code>
+                <br>• Inquire about remaining vacancies: <code>"Check vacancies for XYZ Labs"</code>
+              </div>
+            </div>
+            <form class="chat-input-bar" onsubmit="handleChatSubmit(event)">
+              <input type="text" id="chatInput" class="form-control" placeholder="Ask AURA a question or request an internship plan...">
+              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+          </div>
+        </section>
+
+        <!-- 12. 14-LAB STUDIO (LANGGRAPH ORCHESTRATION) -->
+        <section id="view-studio" class="view-panel">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">14-Lab Agentic AI Studio</h3>
+                <p style="font-size:0.8rem; color:var(--text-muted);">Orchestrated via LangGraph (StateGraph) for Labs 7–8 & Multi-Agent Swarm</p>
+              </div>
+              <span class="badge info">LangGraph Engine v1.2</span>
+            </div>
+
+            <!-- Lab Tabs 1 to 8 -->
+            <div class="lab-tabs">
+              <button class="lab-tab-btn active" onclick="loadLabDemo(1)">Lab 1: Planner Loop</button>
+              <button class="lab-tab-btn" onclick="loadLabDemo(2)">Lab 2: Typed Tools</button>
+              <button class="lab-tab-btn" onclick="loadLabDemo(3)">Lab 3: Reusable Skills</button>
+              <button class="lab-tab-btn" onclick="loadLabDemo(4)">Lab 4: Dual Memory</button>
+              <button class="lab-tab-btn" onclick="loadLabDemo(5)">Lab 5: MCP Connector</button>
+              <button class="lab-tab-btn" onclick="loadLabDemo(6)">Lab 6: Controlled Runtime</button>
+              <button class="lab-tab-btn" style="border-color:var(--primary); color:#a5b4fc;" onclick="loadLabDemo(7)">Lab 7: LangGraph Workflow</button>
+              <button class="lab-tab-btn" style="border-color:#a855f7; color:#d8b4fe;" onclick="loadLabDemo(8)">Lab 8: LangGraph Parallel Swarm</button>
+              <button class="lab-tab-btn" style="border-color:#10b981; color:#6ee7b7;" onclick="loadLabDemo(9)">Lab 9: Deep Research & Grounding</button>
+              <button class="lab-tab-btn" style="border-color:#f59e0b; color:#fcd34d;" onclick="loadLabDemo(10)">Lab 10: Ops Resilience & Self-Healing</button>
+              <button class="lab-tab-btn" style="border-color:#06b6d4; color:#67e8f9;" onclick="loadLabDemo(11)">Lab 11: SDLC Factory (Spec → Output)</button>
+              <button class="lab-tab-btn" style="border-color:#ec4899; color:#f472b6;" onclick="loadLabDemo(12)">Lab 12: Safety & Governance</button>
+              <button class="lab-tab-btn" style="border-color:#8b5cf6; color:#c4b5fd;" onclick="loadLabDemo(13)">Lab 13: Discipline Specialists</button>
+              <button class="lab-tab-btn" style="border-color:#14b8a6; color:#5eead4; font-weight:700;" onclick="loadLabDemo(14)">Lab 14: Capstone (Deployed)</button>
+            </div>
+
+            <div class="lab-workspace">
+              <!-- Left Control Panel -->
+              <div style="background:rgba(0,0,0,0.25); padding:1.25rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle);">
+                <h4 id="labTitle" style="color:#fff; font-size:1rem; margin-bottom:0.4rem;">Lab 1: Agent vs Chatbot (Planner Loop)</h4>
+                <p id="labObjective" style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:1rem;">
+                  Demonstrates the Clarify → Plan → Revise loop. Asks at least 2 clarification questions on vague requests, generates an editable 4-phase plan, and revises upon feedback.
+                </p>
+
+                <div class="form-group">
+                  <label id="labInputLabel">Test Input Prompt / USN:</label>
+                  <input type="text" id="labInputField" class="form-control" value="I want an internship">
+                </div>
+
+                <div id="labExtraControls">
+                  <div style="background:rgba(30,41,59,0.85); border:1px solid rgba(99,102,241,0.4); border-radius:8px; padding:0.75rem; margin-top:0.75rem;">
+                    <div style="background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:6px; padding:0.45rem 0.65rem; margin-bottom:0.6rem; font-size:0.76rem; color:#6ee7b7;">
+                      <strong>Acceptance Criterion:</strong> Given a vague request it asks at least two clarifying questions and yields a coherent, editable plan.
+                    </div>
+
+                    <div style="background:rgba(15,23,42,0.6); border-left:3px solid #6366f1; padding:0.5rem 0.75rem; border-radius:4px; margin-bottom:0.75rem;">
+                      <div style="font-size:0.78rem; font-weight:600; color:#a5b4fc; margin-bottom:0.2rem;">
+                        ⚙️ <strong>Nodes Activated:</strong> Coordinator Loop (no specialist nodes yet)
+                      </div>
+                      <div style="font-size:0.75rem; color:#f87171;">
+                        ⚠️ <strong>Pitfall to Avoid:</strong> Don't answer in one shot — without clarify/revise it's a chatbot, not an agent.
+                      </div>
+                    </div>
+
+                    <div style="font-weight:600; font-size:0.82rem; color:#818cf8; margin-bottom:0.5rem; display:flex; justify-content:space-between; align-items:center;">
+                      <span>Clarification Answers (Name, USN, Branch, CGPA, Location):</span>
+                      <span style="font-size:0.72rem; color:#10b981;">● Auto-Syncs with Lab 4 Memory</span>
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:0.5rem; margin-bottom:0.5rem;">
+                      <div>
+                        <label style="font-size:0.75rem; color:#94a3b8;">1. Student Name:</label>
+                        <input type="text" id="lab1Name" class="form-control form-control-sm" value="" placeholder="e.g. Student Name">
+                      </div>
+                      <div>
+                        <label style="font-size:0.75rem; color:#94a3b8;">2. Student USN:</label>
+                        <input type="text" id="lab1Usn" class="form-control form-control-sm" value="" placeholder="e.g. 1KG21CS045">
+                      </div>
+                      <div>
+                        <label style="font-size:0.75rem; color:#94a3b8;">3. Branch:</label>
+                        <input type="text" id="lab1Branch" class="form-control form-control-sm" value="" placeholder="e.g. CSE">
+                      </div>
+                      <div>
+                        <label style="font-size:0.75rem; color:#94a3b8;">4. Current CGPA:</label>
+                        <input type="text" id="lab1Cgpa" class="form-control form-control-sm" value="" placeholder="e.g. 8.2">
+                      </div>
+                      <div style="grid-column: span 2;">
+                        <label style="font-size:0.75rem; color:#94a3b8;">5. Preferred Location:</label>
+                        <input type="text" id="lab1Location" class="form-control form-control-sm" value="" placeholder="e.g. Bengaluru">
+                      </div>
+                    </div>
+
+                    <div style="margin-bottom:0.5rem;">
+                      <label style="font-size:0.75rem; color:#94a3b8;">Step 3 Student Feedback / Editable Plan Revision:</label>
+                      <input type="text" id="lab1FeedbackInput" class="form-control form-control-sm" value="" placeholder="e.g. Add a milestone for Week 8.">
+                    </div>
+
+                    <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+                      <button type="button" class="btn btn-sm btn-outline-info" onclick="runLab1Step(1)">1. Send 'I want an internship'</button>
+                      <button type="button" class="btn btn-sm btn-outline-primary" onclick="runLab1Step(2)">2. Submit Answers & Generate Coherent Plan</button>
+                      <button type="button" class="btn btn-sm btn-outline-success" onclick="runLab1Step(3)">3. Revise Plan (Week 8 Milestone)</button>
+                      <button type="button" class="btn btn-sm btn-warning" onclick="runLab1FullSequence()" style="margin-left:auto;">▶ Run Full 3-Step Demo</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+                  <button class="btn btn-primary" id="btnRunLab" onclick="executeCurrentLab()">
+                    <i class="fa-solid fa-play"></i> Execute Lab Demo
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Console Output -->
+              <div>
+                <label style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">
+                  Execution Telemetry & LangGraph State
+                </label>
+                <div class="console-box" id="labConsole">Click 'Execute Lab Demo' to run and observe real-time agent telemetry...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- COORDINATOR REVIEW MODAL -->
+  <div class="modal-overlay" id="reviewModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 style="font-family:var(--font-heading); color:#fff; font-size:1.1rem;">Coordinator Review Desk</h3>
+        <button onclick="closeReviewModal()" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:1.1rem;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="modalStudentSummary" style="padding:0.85rem; background:rgba(255,255,255,0.03); border-radius:var(--radius-sm); margin-bottom:1rem; font-size:0.83rem;">
+          <!-- Populated dynamically -->
+        </div>
+
+        <div class="form-group">
+          <label>Review Decision *</label>
+          <select id="modalDecisionSelect" class="form-control" onchange="toggleRejectionField(this.value)">
+            <option value="APPROVE">APPROVE (Sanction Internship)</option>
+            <option value="REJECT">REJECT (Mandatory Reason Required)</option>
+            <option value="CORRECTION_REQUIRED">REQUEST CORRECTION (Student Must Edit)</option>
+          </select>
+        </div>
+
+        <!-- Approval Fields -->
+        <div id="approvalFieldsSection">
+          <div class="form-group">
+            <label>Approved Company</label>
+            <input type="text" id="modalApprovedCompany" class="form-control">
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+            <div class="form-group">
+              <label>Role</label>
+              <input type="text" id="modalApprovedRole" class="form-control" value="Engineering Intern">
+            </div>
+            <div class="form-group">
+              <label>Duration</label>
+              <input type="text" id="modalApprovedDuration" class="form-control" value="4 Months">
+            </div>
+          </div>
+        </div>
+
+        <!-- Mandatory Rejection Field -->
+        <div id="rejectionFieldSection" style="display:none;">
+          <div class="form-group">
+            <label style="color:var(--danger); font-weight:700;">Mandatory Rejection Reason *</label>
+            <textarea id="modalRejectionReason" class="form-control" rows="3" placeholder="Specify why this application is rejected (e.g. CGPA does not satisfy opportunity requirement, company full, etc.). Cannot be empty!"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Coordinator Comments</label>
+          <input type="text" id="modalCoordinatorComments" class="form-control" placeholder="Optional remarks...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeReviewModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitCoordinatorReview()">Submit Decision</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS JOURNAL SUBMISSION MODAL -->
+  <div class="modal-overlay" id="progressModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 style="font-family:var(--font-heading); color:#fff; font-size:1.1rem;">Submit Bi-Weekly Progress Journal</h3>
+        <button onclick="closeProgressModal()" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Reporting Period *</label>
+          <select id="modalReportingPeriod" class="form-control">
+            <option value="Weeks 1-2">Weeks 1-2 (Orientation & Onboarding)</option>
+            <option value="Weeks 3-4">Weeks 3-4 (Architecture & Feature Setup)</option>
+            <option value="Weeks 5-6">Weeks 5-6 (Module Implementation)</option>
+            <option value="Weeks 7-8">Weeks 7-8 (Mid-Term Review & Testing)</option>
+            <option value="Weeks 9-12">Weeks 9-12 (Production Deployment)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Work Completed & Deliverables *</label>
+          <textarea id="modalWorkCompleted" class="form-control" rows="3" placeholder="Detail tasks completed during this 2-week block..."></textarea>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem;">
+          <div class="form-group">
+            <label>Skills Learned</label>
+            <input type="text" id="modalSkillsLearned" class="form-control" placeholder="e.g. Docker, PyTorch, CI/CD">
+          </div>
+          <div class="form-group">
+            <label>Hours Logged</label>
+            <input type="number" id="modalHoursLogged" class="form-control" value="80">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Challenges & Next Objectives</label>
+          <input type="text" id="modalNextObjectives" class="form-control" placeholder="Next sprint targets...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeProgressModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitProgressReportAction()">Submit Journal</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- FINAL EVALUATION & MARKS ENTRY MODAL -->
+  <div class="modal-overlay" id="evaluationEntryModal" style="display:none;">
+    <div class="modal-dialog" style="max-width:620px;">
+      <div class="modal-header">
+        <div>
+          <div style="display:flex; gap:0.4rem; align-items:center; margin-bottom:0.25rem;">
+            <span class="badge primary">COORDINATOR & MENTOR DESK</span>
+            <span class="badge info">12 CREDITS RUBRIC</span>
+          </div>
+          <h3 style="font-family:var(--font-heading); color:#fff; font-size:1.15rem; margin:0;">
+            <i class="fa-solid fa-award" style="color:var(--primary); margin-right:6px;"></i> Record Final Internship Marks & Evaluation
+          </h3>
+        </div>
+        <button onclick="closeEvaluationModal()" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:1.4rem;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:1rem; line-height:1.5;">
+          The <strong>Coordinator & Mentor</strong> enter composite scores across workplace execution, technical presentation, and documentation. Saving will calculate the grade and send it to the <strong>HOD</strong> for credit sanction.
+        </p>
+
+        <div class="form-group">
+          <label style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">SELECT STUDENT & INTERNSHIP</label>
+          <select id="evalModalInternshipSelect" class="form-control" style="font-size:0.85rem;" onchange="onEvalInternshipSelectChange()">
+            <!-- Populated dynamically with internships -->
+          </select>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:0.6rem; margin-top:0.75rem;">
+          <div class="form-group">
+            <label style="font-size:0.72rem; font-weight:600; color:var(--text-muted);">MENTOR SCORE (MAX 40)</label>
+            <input type="number" id="evalMentorScore" class="form-control" min="0" max="40" step="0.5" value="36" oninput="calcEvalLiveTotal()">
+          </div>
+          <div class="form-group">
+            <label style="font-size:0.72rem; font-weight:600; color:var(--text-muted);">PRESENTATION (MAX 30)</label>
+            <input type="number" id="evalPresScore" class="form-control" min="0" max="30" step="0.5" value="28" oninput="calcEvalLiveTotal()">
+          </div>
+          <div class="form-group">
+            <label style="font-size:0.72rem; font-weight:600; color:var(--text-muted);">REPORT DOCS (MAX 30)</label>
+            <input type="number" id="evalRepScore" class="form-control" min="0" max="30" step="0.5" value="27" oninput="calcEvalLiveTotal()">
+          </div>
+        </div>
+
+        <!-- Live Score Calculation Box -->
+        <div style="background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.3); border-radius:6px; padding:0.75rem; margin-top:0.75rem; display:flex; justify-content:space-around; align-items:center;">
+          <div style="text-align:center;">
+            <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Composite Score</div>
+            <div id="evalLiveTotalText" style="font-size:1.2rem; font-weight:700; color:var(--success);">91.0 / 100</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Calculated Grade</div>
+            <div id="evalLiveGradeText"><span class="badge success">S Grade</span></div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase;">Degree Credits</div>
+            <div style="font-size:1rem; font-weight:700; color:#60a5fa;">12 Academic Credits</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:0.75rem;">
+          <label style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">EMPLOYER / INDUSTRY MENTOR FEEDBACK</label>
+          <textarea id="evalEmployerFeedback" class="form-control" rows="2" placeholder="e.g. Demonstrated exceptional technical skills and delivered all sprint milestones ahead of schedule."></textarea>
+        </div>
+
+        <div class="form-group" style="margin-top:0.5rem;">
+          <label style="font-size:0.75rem; font-weight:600; color:var(--text-muted);">COORDINATOR & VIVA ASSESSMENT REMARKS</label>
+          <textarea id="evalCoordRemarks" class="form-control" rows="2" placeholder="e.g. Project presentation was clear, code architecture adheres to enterprise standards."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeEvaluationModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitEvaluationAction()">
+          <i class="fa-solid fa-floppy-disk"></i> Save Marks & Submit to HOD
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OPPORTUNITY PREVIEW & DETAILS MODAL -->
+  <div class="modal-overlay" id="oppPreviewModal" style="display:none;">
+    <div class="modal-dialog" style="max-width:620px;">
+      <div class="modal-header">
+        <div>
+          <div style="display:flex; gap:0.4rem; align-items:center; margin-bottom:0.25rem;">
+            <span id="oppPreviewBadge" class="badge"></span>
+            <span id="oppPreviewId" style="font-size:0.75rem; color:var(--text-muted); font-mono;"></span>
+          </div>
+          <h3 id="oppPreviewCompany" style="font-family:var(--font-heading); color:#fff; font-size:1.25rem; margin:0;"></h3>
+        </div>
+        <button onclick="closeOppPreviewModal()" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:1.4rem;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="oppPreviewTitle" style="font-size:1rem; font-weight:700; color:var(--primary-light); margin-bottom:0.5rem;"></div>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem; background:rgba(0,0,0,0.25); padding:0.75rem; border-radius:var(--radius-sm); margin-bottom:1rem; font-size:0.82rem;">
+          <div><strong>Location:</strong> <span id="oppPreviewLoc"></span></div>
+          <div><strong>Duration:</strong> <span id="oppPreviewDuration"></span></div>
+          <div><strong>Stipend:</strong> <span id="oppPreviewStipend" style="color:#34d399; font-weight:600;"></span></div>
+          <div><strong>Vacancies:</strong> <span id="oppPreviewVacancies" style="color:#60a5fa; font-weight:600;"></span></div>
+        </div>
+
+        <div class="form-group">
+          <label style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">DESCRIPTION & APPLY DETAILS</label>
+          <div id="oppPreviewDesc" style="font-size:0.85rem; color:var(--text-secondary); line-height:1.6; max-height:180px; overflow-y:auto; padding:0.5rem; background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:4px;"></div>
+        </div>
+
+        <div style="background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.3); border-radius:var(--radius-sm); padding:0.75rem; font-size:0.8rem; margin-top:0.75rem;">
+          <div><strong>Eligibility Criteria:</strong> <span id="oppPreviewEligibility"></span></div>
+          <div style="margin-top:2px;"><strong>Application Deadline:</strong> <span id="oppPreviewDeadline"></span></div>
+        </div>
+
+        <!-- DIRECT OFFICIAL JOB APPLYING SECTION -->
+        <div id="oppPreviewApplyBox" style="margin-top:1rem; background:linear-gradient(135deg, rgba(59,130,246,0.12), rgba(16,185,129,0.08)); border:1px solid rgba(59,130,246,0.35); border-radius:6px; padding:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+            <div style="font-size:0.85rem; font-weight:700; color:#93c5fd; display:flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Official Job Application Portal
+            </div>
+            <span class="badge" style="background:rgba(16,185,129,0.2); color:#34d399; font-size:0.7rem; border:1px solid rgba(16,185,129,0.35);">Verified Portal</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-secondary); margin:0 0 0.6rem 0;" id="oppPreviewPortalText">
+            Direct applying link for this job. Click below to open the employer's official job applying page in a new tab:
+          </p>
+          <div id="oppPreviewLinkButtons" style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <!-- Populated dynamically with direct apply links -->
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+        <button class="btn btn-secondary" onclick="closeOppPreviewModal()">Close</button>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <a id="oppPreviewIndeedLink" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="border-color:#3b82f6; color:#93c5fd; text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-weight:600;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Job Applying Page
+          </a>
+          <button class="btn btn-primary" id="oppPreviewApplyBtn" onclick="applyFromPreviewModal()">
+            <i class="fa-solid fa-pen-to-square"></i> Mention in Application Form
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SCRIPTS WITH CACHE BUSTERS -->
+  <script src="js/app.js?v=4.7"></script>
+  <script src="js/workflow.js?v=4.7"></script>
+  <script src="js/aura_studio.js?v=4.6"></script>
+
+
+  <script>
+    // Inline fallback guarantee for Sync Live Indeed Jobs
+    window.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('btnSyncIndeed');
+      if (btn && !btn.getAttribute('data-bound')) {
+        btn.setAttribute('data-bound', 'true');
+        btn.addEventListener('click', () => {
+          if (typeof window.syncIndeedPostings === 'function') {
+            window.syncIndeedPostings();
+          } else {
+            console.warn('Invoking inline fallback sync...');
+            triggerInlineIndeedSync();
+          }
+        });
+      }
+    });
+
+    async function triggerInlineIndeedSync() {
+      const btn = document.getElementById("btnSyncIndeed");
+      const msg = document.getElementById("syncStatusMsg");
+      const sel = document.getElementById("syncFreshnessSelect");
+      const hoursOld = sel ? parseInt(sel.value) : 48;
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Syncing (${hoursOld}h)...`;
+      }
+      if (msg) {
+        msg.innerHTML = `<span style="color:#60a5fa;"><i class="fa-solid fa-cloud-arrow-down fa-spin"></i> Pulling fresh jobs (< ${hoursOld}h old)...</span>`;
+      }
+      try {
+        const res = await fetch("/api/opportunities/sync-indeed", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: "software intern", location: "Bangalore", limit: 15, hours_old: hoursOld })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          if (msg) {
+            msg.innerHTML = `<span style="color:#10b981;"><i class="fa-solid fa-circle-check"></i> Synced ${data.synced_count} Fresh Jobs (1–2 Days Ago)!</span>`;
+            setTimeout(() => { if (msg) msg.innerHTML = ''; }, 6000);
+          }
+          if (typeof loadOpportunities === 'function') loadOpportunities();
+          if (typeof loadDashboardStats === 'function') loadDashboardStats();
+        } else {
+          if (msg) msg.innerHTML = `<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Sync Error: ${data.message || 'Failed'}</span>`;
+        }
+      } catch (err) {
+        if (msg) msg.innerHTML = `<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> ${err.message}</span>`;
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Sync Fresh Live Jobs';
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+

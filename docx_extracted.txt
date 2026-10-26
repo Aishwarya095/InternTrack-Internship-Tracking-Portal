@@ -1,0 +1,498 @@
+KLE Technological University, Belagavi
+Computer Science & Engineering (AI)
+Agentic AI (26ECAC401) — Lab Worklet Review & Evaluation Sheet
+14 Hands-on Labs · to be filled by the student team and marked by the reviewer
+Team name / number
+InternTrack Team  11
+Worklet title
+
+InternTrack — AURA-Powered Internship Application & Tracking Portal
+KPI & Expectations
+Build one unified internship workflow while demonstrating Labs 1–8: planning, tools, reusable skills, memory, governed connector, controlled runtime, LangGraph workflow, and parallel swarm.
+Team members (Name — USN)
+Prerna A -01fe23bci037 
+Aishwarya B A -01fe23bci095
+Sonu Vaishnavi -01fe23bci093
+Nischita N -01fe23bci106
+Review (Week / date)
+Week 8 / 30-09-2026
+
+How each lab is marked (max 10 per lab)
+• Concept (2) — Is the lab's concept correctly understood and clearly mapped to the team's worklet?
+• Technical stack (2) — Is the chosen stack appropriate and correctly justified for the task?
+• Implementation (4) — Does the implementation work and correctly realise the concept (loop / tool / skill / graph / etc.)?
+• Explanation & demo (2) — Is the explanation clear and supported by evidence — repo, screenshots, or a live demo?
+Instructions:  The team fills the four shaded description rows for every lab (be specific; attach evidence). The reviewer fills the marks strip and remarks. Total = sum of 14 labs (out of 140); scale to the lab component weightage as required.
+
+Lab 1 — Agent vs Chatbot
+Concept: Agent loop & the plan–act–observe–revise cycle (vs a stateless chatbot)   ·   Reference worklet: study planner that clarifies, plans and revises
+1.  Concept applied in your worklet — what you used and where
+Used the agent loop for InternTrack's AURA planner: clarify the vague internship request, create a structured plan, receive feedback, and revise the plan.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Python 3.10+, AURA planner module, REST backend, SQLite, and the InternTrack web UI. Session state carries the clarification/plan context.
+3.  Implementation — what you built and how it works (key steps / architecture)
+Flow: user request → clarification questions → initial structured plan → user feedback → revised plan. The planner output is shown in the 14-Lab Studio.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live 14-Lab Studio demo with clarification, initial plan, and revised plan; implementation: aura/lab1_planner.py and Lab 1 execution trace.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 2 — Tool-Using Agent
+Concept: Tool integration & function calling   ·   Reference worklet: calculator, file-reader and a mock-API tool
+1.  Concept applied in your worklet — what you used and where
+Used typed tools so AURA obtains student, opportunity, application/status, eligibility and vacancy facts from tools instead of manually asserting database values.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Python typed tool layer, SQLite-backed workflow/API functions, AURA runtime, schema validation, and the InternTrack Lab Studio UI with tool-call trace.
+3.  Implementation — what you built and how it works (key steps / architecture)
+A request is mapped to a typed tool, validated, executed against real data, and returned as structured output. Tool calls and results are visible in the execution trace.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live Lab 2 execution showing tool calls and real database results; evidence includes the 14-Lab Studio tool trace and acceptance tests.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 3 — Skill Creation
+Concept: Reusable skills (instructions + tools + resources)   ·   Reference worklet: a reusable research-summary skill
+1.  Concept applied in your worklet — what you used and where
+Packaged repeated internship capabilities as reusable schema-typed skills: InternshipPlanSkill, ApplicationValidatorSkill, OpportunityMatchingSkill, and DocumentFormatterSkill.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Python skill modules, typed input/output schemas, AURA skill executor, SQLite-backed data/workflows, and the Lab Studio skill selector.
+3.  Implementation — what you built and how it works (key steps / architecture)
+Each selected skill accepts structured input, validates its schema, performs its defined operation, and returns a standardized verified output that can be reused by the agent workflow.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live Lab 3 Skill Creation demo showing the reusable skill selector and execution output for Rahul Kumar; evidence in the Lab 3 Studio.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 4 — Memory & Retrieval
+Concept: Short-term state vs long-term retrieval (RAG)   ·   Reference worklet: session state vs a stored/retrieved reference
+1.  Concept applied in your worklet — what you used and where
+Separated AURA's short-term working SessionState from persistent historical submission/reference memory. Used session context for the active plan and history for prior internship information.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Python session/state handling, SQLite persistent memory records, keyword/cosine-style retrieval, and the InternTrack Lab 4 memory UI.
+3.  Implementation — what you built and how it works (key steps / architecture)
+Active clarification answers and revised plan remain in working memory, while prior submissions/preferences are retrieved from persistent history; opportunity similarity search is also demonstrated.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live Lab 4 demo showing SessionState, historical records, persistent memory records, and cosine-similarity opportunity results.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 5 — MCP-Style Connector
+Concept: Model Context Protocol & connectors   ·   Reference worklet: one server exposing File + SQLite + API
+1.  Concept applied in your worklet — what you used and where
+Implemented a governed MCP-style connector as the controlled gateway between AURA and selected data sources. Student access is scoped to the caller; coordinator/HOD access is broader.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Python MCPConnectorServer, HTTP REST API, Bearer authentication, HMAC-SHA256 token validation, role-based authorization, SQLite workflow layer, and access telemetry.
+3.  Implementation — what you built and how it works (key steps / architecture)
+Three connector endpoints expose student profiles, published opportunities, and application feeds. Missing/invalid auth returns 401; unauthorized cross-student access returns 403; successful calls return live DB data.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live Lab 5 demo: authenticated self-access returns 200, cross-student access returns 403, anonymous access returns 401. Dedicated Lab 5 governance tests: 12/12 passed.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 6 — OpenCLA / OpenClaw Runtime
+Concept: Agent runtime with logging   ·   Reference worklet: runtime running skills, tools, memory + an audit log
+1.  Concept applied in your worklet — what you used and where
+Used a controlled agent runtime with budgets, step tracking, checkpoints, audit events, and a mandatory Coordinator Human Gate before consequential internship approval/rejection.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Python ControlledAgentRuntime, SQLite audit_logs, workflow/submission APIs, REST approval/rejection endpoints, role checks, and the AURA Lab Studio UI.
+3.  Implementation — what you built and how it works (key steps / architecture)
+Safe eligibility/vacancy checks run first. A risky action pauses with PAUSED_FOR_APPROVAL; only an authorized Coordinator can approve or reject. Approval/rejection then commits through the real submission workflow.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live Lab 6 Human Gate demo plus database evidence before/after approval and rejection. Dedicated verification passed all 13 criteria; Labs 1–5 regression passed.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 7 — Agentic Node Graph
+Concept: Graph-based orchestration (LangGraph)   ·   Reference worklet: campus app graph: requirement → design → release
+1.  Concept applied in your worklet — what you used and where
+Modelled the internship application workflow as a LangGraph StateGraph: ingest → planner → discovery → eligibility → application → validation → human gate → publish, with bounded retry.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Official LangGraph StateGraph, TypedDict state, MemorySaver checkpointing, SQLite workflows, Python backend/API, and InternTrack Human Gate UI.
+3.  Implementation — what you built and how it works (key steps / architecture)
+Validation conditionally routes to pass, bounded retry, or escalation. The graph pauses at the Coordinator gate using a checkpoint; approval resumes the same graph and publish commits the canonical workflow.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live Lab 7 LangGraph Studio and verification suite: real StateGraph, checkpoint pause/resume, Coordinator-only approval, rejection reason, bypass protection, and 9/9 Lab 7 tests passed.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 8 — Parallel Swarm
+Concept: Parallel execution, swarms & fault-tolerant merge   ·   Reference worklet: hackathon planner: 4 role agents + a merge step
+1.  Concept applied in your worklet — what you used and where
+Used a parallel swarm to evaluate up to four internship preferences concurrently, merge all worker results, rank opportunities, and then wait for Coordinator approval.
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+Official LangGraph StateGraph, MemorySaver, parallel Pregel workers, Annotated list reducer with operator.add, SQLite eligibility/vacancy checks, REST API, and Human Gate UI.
+3.  Implementation — what you built and how it works (key steps / architecture)
+split → 4 parallel workers → fan-in reducer → eligibility/vacancy ranking → Coordinator gate. Worker failures are isolated as WORKER_ERROR; approval resumes the same checkpoint into the commit node.
+4.  Evidence — repo link / screenshots / demo / sample output
+Live Lab 8 demo shows four parallel branches, real DB eligibility/vacancy data, ranking, and Coordinator Human Gate. Dedicated Lab 8 suite: 13/13 passed; Labs 1–7 regression passed.
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 9 — Deep Research Agent
+Concept: Deep research with evidence synthesis   ·   Reference worklet: AI topic briefing with a cited evidence table
+1.  Concept applied in your worklet — what you used and where
+
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+
+3.  Implementation — what you built and how it works (key steps / architecture)
+
+4.  Evidence — repo link / screenshots / demo / sample output
+
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 10 — Cloud Operations Agent
+Concept: Cloud agents, observability & failure handling   ·   Reference worklet: diagnose and fix a failed deployment
+1.  Concept applied in your worklet — what you used and where
+
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+
+3.  Implementation — what you built and how it works (key steps / architecture)
+
+4.  Evidence — repo link / screenshots / demo / sample output
+
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 11 — Agentic SDLC Factory
+Concept: Agentic SDLC (requirements → tested code)   ·   Reference worklet: requirement → tested implementation pipeline
+1.  Concept applied in your worklet — what you used and where
+
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+
+3.  Implementation — what you built and how it works (key steps / architecture)
+
+4.  Evidence — repo link / screenshots / demo / sample output
+
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 12 — Safety & Governance
+Concept: Approval gates, audit logs, evaluation, rollback   ·   Reference worklet: risk, approval, evaluation and rollback plan
+1.  Concept applied in your worklet — what you used and where
+
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+
+3.  Implementation — what you built and how it works (key steps / architecture)
+
+4.  Evidence — repo link / screenshots / demo / sample output
+
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 13 — Discipline-Specific Agents
+Concept: Domain worklet for the team's discipline   ·   Reference worklet: an ME / CE / EE domain-specific agent
+1.  Concept applied in your worklet — what you used and where
+
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+
+3.  Implementation — what you built and how it works (key steps / architecture)
+
+4.  Evidence — repo link / screenshots / demo / sample output
+
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Lab 14 — Capstone Project Studio
+Concept: End-to-end, team-owned agentic system   ·   Reference worklet: the full integrated worklet (all concepts)
+1.  Concept applied in your worklet — what you used and where
+
+2.  Technical stack — languages, frameworks, libraries, APIs, models, tools
+
+3.  Implementation — what you built and how it works (key steps / architecture)
+
+4.  Evidence — repo link / screenshots / demo / sample output
+
+Concept
+(2)
+Stack
+(2)
+Implementation
+(4)
+Explanation & demo
+(2)
+Total
+(10)
+Remarks
+
+
+
+
+
+
+
+
+Marks Summary
+Lab
+Title
+Max
+Marks awarded
+1
+Agent vs Chatbot
+10
+
+2
+Tool-Using Agent
+10
+
+3
+Skill Creation
+10
+
+4
+Memory & Retrieval
+10
+
+5
+MCP-Style Connector
+10
+
+6
+OpenCLA / OpenClaw Runtime
+10
+
+7
+Agentic Node Graph
+10
+
+8
+Parallel Swarm
+10
+
+9
+Deep Research Agent
+10
+
+10
+Cloud Operations Agent
+10
+
+11
+Agentic SDLC Factory
+10
+
+12
+Safety & Governance
+10
+
+13
+Discipline-Specific Agents
+10
+
+14
+Capstone Project Studio
+10
+
+Total
+140
+
+
+Reviewer signature: ______________________          Date: ________________

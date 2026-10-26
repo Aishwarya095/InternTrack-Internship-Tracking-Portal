@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.class
+
+# Pytest cache
+.pytest_cache/
+
+# Environments & OS files
+.env
+.DS_Store
+Thumbs.db
+*.tmp
