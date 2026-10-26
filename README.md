@@ -1,27 +1,12 @@
 # InternTrack (AURA) — Autonomous University Regulatory Assistant
-### 8th-Semester Internship Lifecycle & Regulatory Governance Portal
-**Institution:** KLE Technological University, Hubli  
-**Department:** Computer Science & Engineering (AI)  
-**Course Code:** Agentic AI (26ECAC401) — 15 Worklets / 14-Lab Build Book (Chapter 10: Worklet 10)  
-**Master Test Suite Status:** **81 / 81 Tests Passed (100% Pass Rate)**  
 
----
-
-## 👥 InternTrack Team 11
-* **Prerna A** (01FE23BCI037)
-* **Aishwarya B A** (01FE23BCI095)
-* **Sonu Vaishnavi** (01FE23BCI093)
-* **Nischita N** (01FE23BCI106)
-
----
-
-## 🏛️ Guiding Institutional Principle
+## Guiding Institutional Principle
 > *"Agents draft and flag; a named human approves."*  
 Autonomous multi-agent swarms assist in screening, matching, and validating deliverables, but consequential state transitions (committing company placements, awarding 12 academic credits) are strictly governed by human approval checkpoints.
 
 ---
 
-## 🚀 Key Features & Architectural Roles
+## Key Features & Architectural Roles
 
 InternTrack enforces role-based access control (RBAC) across three primary personas:
 
@@ -48,7 +33,7 @@ InternTrack enforces role-based access control (RBAC) across three primary perso
 
 ---
 
-## 🧪 Master 14-Lab Implementation Matrix (81 / 81 Passed)
+## Master 14-Lab Implementation Matrix (81 / 81 Passed)
 
 | Lab # | Phase | Title & Capability | Implementation Module | Tests |
 | :---: | :---: | :--- | :--- | :---: |
@@ -70,8 +55,8 @@ InternTrack enforces role-based access control (RBAC) across three primary perso
 
 ---
 
-## 📊 Live Cohort State (`database/interntrack.db`)
-* **65 Students** registered across Computer Science & Engineering (AI).
+## Live Cohort State (`database/interntrack.db`)
+* **65 Students** registered across the department.
 * **50 Corporate Opportunities** with **207 Available Vacancies**.
 * **19 Placed-Company Direct Confirmations**.
 * **44 Active Tracked Internships** with verified progress journals.
@@ -79,7 +64,7 @@ InternTrack enforces role-based access control (RBAC) across three primary perso
 
 ---
 
-## 🛠️ Quick Start & Running Locally
+## Quick Start & Running Locally
 
 ### 1. Install Requirements
 ```bash
@@ -100,6 +85,6 @@ Verifies all 81 unit tests across Labs 1 through 14.
 
 ---
 
-## 📄 Official Documentation Artifacts
+## Official Documentation Artifacts
 * `InternTrack_AURA_14_Labs_Master_Implementation_and_Test_Report.pdf`: Complete 14-lab technical report with architectural diagrams and test proofs.
 * `AAI_26ECAC401_Lab_Worklet_Review_Sheet_LAB1_to_14_FILLED.pdf`: Official university evaluation review sheet filled for all 14 labs.
