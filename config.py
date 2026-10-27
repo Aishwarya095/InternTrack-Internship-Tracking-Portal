@@ -12,7 +12,7 @@ SCHEMA_FILE = os.path.join(DATABASE_DIR, "schema.sql")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 PORT = int(os.environ.get("PORT", 8000))
-HOST = os.environ.get("HOST", "127.0.0.1")
+HOST = os.environ.get("HOST", "0.0.0.0")
 
 # Governed MCP Connector Secret Key (Configurable via Environment Variable)
 INTERNTRACK_GOVERNED_MCP_TOKEN = os.environ.get("INTERNTRACK_GOVERNED_MCP_TOKEN", "INTERNTRACK_GOVERNED_MCP_TOKEN_2026")

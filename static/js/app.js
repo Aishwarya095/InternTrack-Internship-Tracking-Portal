@@ -46,7 +46,8 @@ function switchView(viewName) {
     "evaluation": "Final Evaluation & Credits",
     "audit": "Immutable System Audit Trail",
     "chat": "1-on-1 AURA Assistant",
-    "studio": "14-Lab Studio (LangGraph Engine)"
+    "studio": "14-Lab Studio (LangGraph Engine)",
+    "resume-matcher": "Resume / CV Skills Auto-Matcher"
   };
   document.getElementById("currentViewTitle").innerText = titles[viewName] || "InternTrack";
 

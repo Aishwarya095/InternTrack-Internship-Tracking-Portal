@@ -24,6 +24,7 @@ from workflows.opportunities import list_opportunities, get_opportunity, create_
 from workflows.tracking import get_internships, submit_progress_report, get_progress_reports, review_progress_report
 
 from workflows.evaluation import record_evaluation, finalize_evaluation, get_all_evaluations
+from workflows.resume_matcher import match_resume_to_opportunities
 from aura.coordinator import handle_aura_chat, planner_agent, tool_agent, runtime_engine
 from aura.lab3_skills import (
     InternshipPlanSkill, ApplicationValidatorSkill, OpportunityMatchingSkill, DocumentFormatterSkill,
@@ -239,6 +240,18 @@ class InternTrackApiHandler(http.server.SimpleHTTPRequestHandler):
                     "opportunities": synced,
                     "message": f"Successfully pulled and registered {len(synced)} fresh Indeed opportunities posted in the last {hours_old} hours (1-2 days ago)."
                 })
+            except Exception as e:
+                return self.send_json(500, {"status": "ERROR", "message": str(e)})
+
+        # 5c. Resume / CV Skills Auto-Matcher
+        if path == "/api/resume/match":
+            resume_text = body.get("resume_text", "")
+            student_usn = body.get("student_usn", None)
+            try:
+                res = match_resume_to_opportunities(resume_text, student_usn)
+                return self.send_json(200, res)
+            except ValueError as ve:
+                return self.send_json(400, {"status": "ERROR", "message": str(ve)})
             except Exception as e:
                 return self.send_json(500, {"status": "ERROR", "message": str(e)})
 
